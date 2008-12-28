@@ -1,0 +1,10 @@
+Revision history for Perl extension ElkM1::Control.
+
+0.02  Thu Jan 19 08:27:44 EST 2006
+    - initial alpha public release of ElkM1::Control. Basic
+      function provided. More documentation, testing needed.
+
+0.01  Mon Jan  9 14:02:59 2006
+	- original version; created by h2xs 1.23 with options
+		-AX ElkM1::Control
+
