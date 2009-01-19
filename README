@@ -15,7 +15,7 @@ HOW TO BUILD
 
     This package should be a fairly straight forward build. 
 
-    Perl Makefile.PL
+    perl Makefile.PL
     make
     make test
 

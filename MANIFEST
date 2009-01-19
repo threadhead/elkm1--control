@@ -23,6 +23,7 @@ lib/ElkM1/Control/Message/ZoneChangeUpdateReport.pm
 lib/ElkM1/Control/Message/ZoneDefinitionReply.pm
 lib/ElkM1/Control/Message/ZonePartitionReply.pm
 lib/ElkM1/Control/Message/ZoneStatusReply.pm
+lib/ElkM1/Control/Message/EthernetModuleTest.pm
 lib/ElkM1/Control/MessageFactory.pm
 lib/ElkM1/Control/Words.pm
 Makefile.PL
