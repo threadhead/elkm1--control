@@ -1259,7 +1259,7 @@ Request the temperature from the specified group and device. The
 group is either 0 for temperature probe, 1 for keypads and 2 for
 thermostats. The device is the specific groups device number. This
 method returns a L<ElkM1::Control::Message::TemperatureReply> 
-with the information requested. 
+with the information requested.
 
 # TODO make group take a number of name.
 

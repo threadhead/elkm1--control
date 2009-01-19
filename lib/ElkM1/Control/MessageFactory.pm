@@ -33,6 +33,7 @@ our %DISPATCH_MAP = (
 		'TR' => 'ElkM1::Control::Message::ThermostatDataReply',
 		'PC' => 'ElkM1::Control::Message::PLCChangeUpdate',
 		'ZV' => 'ElkM1::Control::Message::ZoneAnalogVoltageReply',
+		'XK' => 'ElkM1::Control::Message::EthernetModuleTest',
 );
 
 =head1 METHODS
@@ -62,7 +63,7 @@ sub instantiate {
 	require $module_file
 		unless $INC{$module_file};
 
-	return $module->new(message => $message);	
+	return $module->new(message => $message);
 }
 
 1;

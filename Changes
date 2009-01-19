@@ -1,5 +1,9 @@
 Revision history for Perl extension ElkM1::Control.
 
+0.03  2009-01-18
+	- fixed BypassedZoneState -> BypassedZoneStateReply
+	- added EthernetModuleTest message
+
 0.02  Thu Jan 19 08:27:44 EST 2006
     - initial alpha public release of ElkM1::Control. Basic
       function provided. More documentation, testing needed.
