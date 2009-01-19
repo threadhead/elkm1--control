@@ -2,7 +2,7 @@ Changes
 lib/ElkM1/Control.pm
 lib/ElkM1/Control/Message.pm
 lib/ElkM1/Control/Message/ArmingStatusReport.pm
-lib/ElkM1/Control/Message/BypassedZoneState.pm
+lib/ElkM1/Control/Message/BypassedZoneStateReply.pm
 lib/ElkM1/Control/Message/ElkRPConnect.pm
 lib/ElkM1/Control/Message/InstallerProgramModeExit.pm
 lib/ElkM1/Control/Message/KeypadAreaReply.pm

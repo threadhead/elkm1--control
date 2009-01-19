@@ -8,7 +8,7 @@ use warnings;
 
 =head1 NAME
 
-ElkM1::Control::Message::BypassedZoneState;
+ElkM1::Control::Message::BypassedZoneStateReply;
 
 =cut
 
@@ -71,7 +71,7 @@ Return a string which represents the status of this message in a human readable 
 
 sub toString { 
 	my $self = shift;
-	"BypassedZoneState: ".$self->getZone." is ".($self->isBypassed ? 'bypassed' : 'not bypassed');
+	"BypassedZoneStateReply: ".$self->getZone." is ".($self->isBypassed ? 'bypassed' : 'not bypassed');
 }
 
 =head1 VERSION 
