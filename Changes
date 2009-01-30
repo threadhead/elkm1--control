@@ -1,5 +1,9 @@
 Revision history for Perl extension ElkM1::Control.
 
+0.1.0 2009-01-29
+	- added fix for PLCStatusReply, changed version to 0.1.0
+	- replaced EthernetModuleTest with Taras Dejneka version
+
 0.03  2009-01-18
 	- fixed BypassedZoneState -> BypassedZoneStateReply
 	- added EthernetModuleTest message
