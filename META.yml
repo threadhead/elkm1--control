@@ -1,7 +1,7 @@
 # http://module-build.sourceforge.net/META-spec.html
 #XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
 name:         ElkM1-Control
-version:      0.02
+version:      0.1.0
 version_from: lib/ElkM1/Control.pm
 installdirs:  site
 requires:

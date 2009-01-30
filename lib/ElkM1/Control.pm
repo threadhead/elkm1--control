@@ -107,7 +107,7 @@ my $UNIT_PARAM = {
     description => 'an unit code from 1..16'
 };
 
-our $VERSION = '0.02';
+our $VERSION = '0.1.0';
 
 =head1 METHODS
 
