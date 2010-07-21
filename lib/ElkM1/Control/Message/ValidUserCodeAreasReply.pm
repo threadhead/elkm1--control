@@ -46,7 +46,7 @@ my %TYPES = ('1' => 'User',
 
 sub getCode { 
 	my $self = shift;
-	int(substr($self->command,2,5));
+	int(substr($self->command,2,6));
 }
 
 =item getAreaMask() 
@@ -58,7 +58,7 @@ sub getCode {
 
 sub getAreaMask { 
 	my $self = shift;
-	int(hex(substr($self->command,7,2)));
+	int(hex(substr($self->command,8,2)));
 }
 
 =item isValidInArea($area) 
@@ -69,7 +69,7 @@ sub getAreaMask {
 
 sub isValidInArea { 
     my $self = shift;
-    my $area; 
+    my $area = shift; 
     my $mask = (1<<($area - 1));
 
     return ($self->getAreaMask & $mask) == $mask;
@@ -84,7 +84,7 @@ sub isValidInArea {
 
 sub getDiagnosticData { 
 	my $self = shift;
-	substr($self->command,8,8);
+	substr($self->command,10,8);
 }
 
 =item getUserCodeLength() 
@@ -95,7 +95,7 @@ sub getDiagnosticData {
 
 sub getUserCodeLength { 
 	my $self = shift;
-	int(substr($self->command,16,1));
+	int(substr($self->command,18,1));
 }
 
 =item getCodeType() 
@@ -107,7 +107,7 @@ sub getUserCodeLength {
 
 sub getCodeType { 
 	my $self = shift;
-	substr($self->command,17,1);
+	substr($self->command,19,1);
 }
 
 =item getCodeTypeName() 
@@ -119,7 +119,7 @@ sub getCodeType {
 
 sub getCodeTypeName { 
 	my $self = shift;
-	exists $TYPES{$self->getCodeTypeValue} ? $TYPES{$self->getCodeTypeValue} : '<unknown>';
+	exists $TYPES{$self->getCodeType} ? $TYPES{$self->getCodeType} : '<unknown>';
 }
 
 =item toString()
@@ -131,8 +131,10 @@ sub getCodeTypeName {
 sub toString {
 	my $self = shift;
 	"ValidUserCodeAreasReply: code=".$self->getCode.
-			", codeType=".$self->getCodeType." (".$self->getCodeTypeValue.")".
+			", codeType=".$self->getCodeType.
+			", codeTypeName=".$self->getCodeTypeName.
 			", diag=".$self->getDiagnosticData.
+			", areaMask=".$self->getAreaMask.
 			", codeLength=".$self->getUserCodeLength;
 }
 

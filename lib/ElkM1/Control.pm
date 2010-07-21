@@ -1387,7 +1387,7 @@ sub requestValidUserCodeAreas {
     $self->_checkParam( { code => { rules => $CODE_PARAM, var => \$code }, },
         \%args );
 
-    $self->sendCommand( sprintf( 'ua%05d', $code ) );
+    $self->sendCommand( sprintf( 'ua%06d', $code ) );
     return $self->readMessage('UA');
 }
 
@@ -1566,7 +1566,9 @@ sub readMessage {
 
         print "readMessage: wanted $type, got "
           . $msgObj->type
-          . ". Adding to queue.\n";
+          . ". Adding to queue.\n"
+          if ( $self->{debug} );
+
         push @{ $self->{_queue} }, $msgObj;
     }
 

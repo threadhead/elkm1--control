@@ -34,7 +34,8 @@ our %DISPATCH_MAP = (
 		'PC' => 'ElkM1::Control::Message::PLCChangeUpdate',
 		'ZV' => 'ElkM1::Control::Message::ZoneAnalogVoltageReply',
 		'XK' => 'ElkM1::Control::Message::EthernetModuleTest',
-		'PS' => 'ElkM1::Control::Message::PLCStatusReply'
+		'PS' => 'ElkM1::Control::Message::PLCStatusReply',
+		'UA' => 'ElkM1::Control::Message::ValidUserCodeAreasReply'
 );
 
 =head1 METHODS
