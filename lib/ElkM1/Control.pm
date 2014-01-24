@@ -1081,7 +1081,7 @@ sub controlPLCDevice {
             'ontime' => {
                 allow => sub { ( $_[0] >= 1 and $_[0] <= 9999 ) },
                 default     => 0,
-                var         => \$extended,
+                var         => \$onTime,
                 description => 'an ontime from 0..9999'
             },
         },
