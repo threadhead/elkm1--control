@@ -65,7 +65,7 @@ return a human readable value for this message.
 
 sub toString { 
 	my $self = shift;
-	'PLCStatusReply: bank='.$self->getBank.', status='.join ',', map { $self->getStatus($i)} (0..63);
+	'PLCStatusReply: bank='.$self->getBank.', status='.join ',', map { $self->getStatus($_)} (0..63);
 }
 
 =head1 VERSION 

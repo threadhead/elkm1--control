@@ -1017,7 +1017,7 @@ sub togglePLCDevice {
     ( $house, $unit ) = $self->_calculateHouseUnitCode($index)
       if ($index);
 
-    $self->sendCommand( sprintf( 'pf%c%02d', $house, $unit ) );
+    $self->sendCommand( sprintf( 'pt%c%02d', $house, $unit ) );
 }
 
 =item $elk->controlPLCDevice( unit => 2, house => 'A', [ index => 123 ], function => 2, extended => 54, ontime => 180 );
@@ -1081,7 +1081,7 @@ sub controlPLCDevice {
             'ontime' => {
                 allow => sub { ( $_[0] >= 1 and $_[0] <= 9999 ) },
                 default     => 0,
-                var         => \$extended,
+                var         => \$onTime,
                 description => 'an ontime from 0..9999'
             },
         },
