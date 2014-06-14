@@ -93,7 +93,7 @@ sub getType {
 
 sub getTypeName  {
 	my $self = shift;
-	return exists($TYPES{$self->getTypeValue}) ? $TYPES{$self->getTypeValue} : '<unknown>';
+	return exists($TYPES{$self->getType}) ? $TYPES{$self->getType} : '<unknown>';
 }
 
 =item getIndex()
@@ -158,7 +158,7 @@ sub isShownOnKeypad {
 
 sub toString {
 	my $self = shift;
-	"StringTextDescriptionReply: type=".$self->getType." (".$self->getTypeValue."), index=".$self->getIndex.", text='".$self->getText.'\'';
+	"StringTextDescriptionReply: type=".$self->getType." (".$self->getTypeName."), index=".$self->getIndex.", text='".$self->getText.'\'';
 }
 
 =head1 VERSION 
