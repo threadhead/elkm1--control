@@ -124,7 +124,7 @@ Obtain the name of the zone type.
 sub getTypeName { 
 	my $self = shift;
 	my $zone = shift;
-	my $val = $self->getTypeValue($zone);
+	my $val = $self->getType($self,$zone);
 
 	exists $TYPE{$val} ? $TYPE{$val} : "unknown $val";
 }
