@@ -13,6 +13,7 @@ package ElkM1::Control::MessageFactory;
 
 use strict;
 use warnings;
+use Carp;
 
 # Our listing of message types to objects. 
 
@@ -28,7 +29,7 @@ our %DISPATCH_MAP = (
 		'TC' => 'ElkM1::Control::Message::TaskChangeUpdate',
 		'SD' => 'ElkM1::Control::Message::StringTextDescriptionReply',
 		'ST' => 'ElkM1::Control::Message::TemperatureReply',
-	#	'CR' => 'ElkM1::Control::Message::CustomValueReply',
+		'CR' => 'ElkM1::Control::Message::CustomValueReply',
 		'KC' => 'ElkM1::Control::Message::KeypadKeyChangeUpdate',
 		'TR' => 'ElkM1::Control::Message::ThermostatDataReply',
 		'PC' => 'ElkM1::Control::Message::PLCChangeUpdate',
@@ -53,8 +54,12 @@ our %DISPATCH_MAP = (
 =cut
 
 sub instantiate { 
+
 	my $class = shift;
 	my $message = shift;
+
+	croak "bad message from XEP (too short)" 
+          unless (bytes::length($message)  >= 8 );
 
 	my $type = substr($message,2,2);
 	my $module = $DISPATCH_MAP{$type} || 'ElkM1::Control::Message';
