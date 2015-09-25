@@ -1,5 +1,11 @@
 Revision history for Perl extension ElkM1::Control.
 
+0.1.1 2015-09-25
+	- Fixed port configuration bug (would not actually use port from params)
+	- Fixed SSH connections by setting to SSLv3
+	- Added Username and Password authentication on SSH
+	- Implemented CustomValueReply.pm
+
 0.1.0 2009-01-29
 	- added fix for PLCStatusReply, changed version to 0.1.0
 	- replaced EthernetModuleTest with Taras Dejneka version

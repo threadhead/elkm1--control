@@ -21,13 +21,14 @@ ElkM1::Control - Package providing API interface to the Elk Products M1 Cross Pl
 
     use ElkM1::Control;
 
-    my $elk = ElkM1::Control->new('host' => '192.168.1.115', 'port' => 2101, use_ssl => 0);
+    my $elk = ElkM1::Control->new('host' => '192.168.1.115', 'port' => 2101, use_ssl => 0
+                                  username => 'user', password => 'password');
 
     # Main loop, read any message. 
     while (1) {  
         while (my $msg = $elk->readMessage) {
             if (ref($msg) eq 'ElkM1::Control::ZoneChangeUpdate') { 
-                print "zone ".$msg->getZone." is now ".getState;
+                print "zone " . $msg->getZone . " is now " . $msg->getState . "\n";
                 
                 # If zone 1 is violated, activate task 1
                 # and do something else. 
@@ -36,7 +37,7 @@ ElkM1::Control - Package providing API interface to the Elk Products M1 Cross Pl
                     # ... something else ...  
                 }
             } else { 
-                print $msg->toString;
+                print $msg->toString . "\n";
             }
         }
     }
@@ -107,7 +108,7 @@ my $UNIT_PARAM = {
     description => 'an unit code from 1..16'
 };
 
-our $VERSION = '0.1.0';
+our $VERSION = '0.1.1';
 
 =head1 METHODS
 
@@ -161,15 +162,15 @@ sub _checkParam {
     return $args;
 }
 
-=item $elk->new( host => 'host', port => port, use_ssl => 1, debug => 0)
+=item $elk->new( host => 'host', port => port, use_ssl => 1, username => 'username', password => 'password' , debug => 0)
 
 Construct a ElkM1::Control object with the given parameters. This method
 accepts the following paramters. host, the host to which to connect to.
 This can be either a hostname or ip address. The port to connect to and
 if not specified will be either 2101 or 2601 depending on the use_ssl flag. 
 The use_ssl flag determines whether or not to connect using SSL. Use
-this if you connec to the secure port. The debug flag indicates whether
-all messages will be printed to stdout. 
+this if you connect to the secure port.  Username and Password if enabled in XEP
+The debug flag indicates whether all messages will be printed to stdout. 
 
 returns a blessed reference on success, croaks on failure.
 
@@ -187,12 +188,20 @@ sub new {
             },
             port => {
                 allow       => qr/^\d+$/,
-                description => 'must be a hostname or IP address'
+                description => 'port to connect to'
             },
             use_ssl => {
                 allow       => qr/^(1|0)/,
                 default     => 0,
                 description => 'must be 1 or 0'
+            },
+            username => {
+                default     => '',
+                description => 'username if enabled in XEP'
+            },
+            password => {
+                default     => '',
+                description => 'password if enabled in XEP'
             },
             debug => {
                 allow       => qr/^(\d)$/,
@@ -204,7 +213,7 @@ sub new {
     );
 
     $obj->{port} = ( $obj->{use_ssl} ? 2601 : 2101 )
-      unless ( !exists $obj->{port} );
+      unless ( exists $obj->{port} );
 
     $obj->{_queue} = [];
 
@@ -235,7 +244,8 @@ sub connect {
         $sock = new IO::Socket::SSL(
             PeerAddr => $self->{host},
             PeerPort => $self->{port},
-            Proto    => 'tcp'
+            Proto    => 'tcp',
+            SSL_version => 'SSLv3'
         );
     }
     else {
@@ -251,6 +261,33 @@ sub connect {
       unless ( defined $sock );
 
     $self->{_socket} = $sock;
+
+    if ( $self->{use_ssl} and $self->{username} ) {
+        my $msg; 
+
+        # give XEP time to initiate authentication - if not our readLine will timeout with nothing
+        sleep (2) ; 
+          
+        croak "No response from XEP waiting for: 'lf'"
+          unless ( $self->_readLine =~ /\n/);
+ 
+        # send username before prompt because readLine is waiting for lf and XEP is prompting for Username
+        print $sock "$self->{username}\r\n";
+
+        croak "No response from XEP waiting for: Username:"
+          unless ( $self->_readLine =~ /Username:/);
+
+        # send password before prompt because readLine is waiting for lf and XEP is prompting for Password
+        print $sock "$self->{password}\r\n";
+
+        croak "No response from XEP waiting for: Password:"
+          unless ( $self->_readLine =~ /Password:/);
+
+        croak "Authentication failed"
+          unless ( $self->_readLine =~ /Elk-M1XEP: Login successful./);
+        # XEP responds with "*read:errno=0" if authentication fails
+        
+    } #end if Authentication 
 
     return 1;
 }
@@ -1618,7 +1655,7 @@ __END__
 
 =head1 VERSION
 
-Version 0.02
+Version 0.1.1
 
 =cut
 
