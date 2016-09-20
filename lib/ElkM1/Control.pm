@@ -108,7 +108,7 @@ my $UNIT_PARAM = {
     description => 'an unit code from 1..16'
 };
 
-our $VERSION = '0.1.1';
+our $VERSION = '0.1.2';
 
 =head1 METHODS
 
@@ -265,26 +265,25 @@ sub connect {
     if ( $self->{use_ssl} and $self->{username} ) {
         my $msg; 
 
-        # give XEP time to initiate authentication - if not our readLine will timeout with nothing
-        sleep (2) ; 
+        # XEP can take a long time to respond use a min of 3 second timeout in _readLine
           
         croak "No response from XEP waiting for: 'lf'"
-          unless ( $self->_readLine =~ /\n/);
+          unless ( $self->_readLine(4) =~ /\n/);
  
         # send username before prompt because readLine is waiting for lf and XEP is prompting for Username
         print $sock "$self->{username}\r\n";
 
         croak "No response from XEP waiting for: Username:"
-          unless ( $self->_readLine =~ /Username:/);
+          unless ( $self->_readLine(4) =~ /Username:/);
 
         # send password before prompt because readLine is waiting for lf and XEP is prompting for Password
         print $sock "$self->{password}\r\n";
 
         croak "No response from XEP waiting for: Password:"
-          unless ( $self->_readLine =~ /Password:/);
+          unless ( $self->_readLine(4) =~ /Password:/);
 
         croak "Authentication failed"
-          unless ( $self->_readLine =~ /Elk-M1XEP: Login successful./);
+          unless ( $self->_readLine(4) =~ /Elk-M1XEP: Login successful./);
         # XEP responds with "*read:errno=0" if authentication fails
         
     } #end if Authentication 
@@ -1616,12 +1615,13 @@ sub readMessage {
 
 sub _readLine {
     my $self   = shift;
+    my $timeout = shift || 1;
     my $socket = $self->{_socket};
     my $line   = undef;
 
     eval {
         local $SIG{ALRM} = sub { die "alarm\n"; };
-        alarm 1;
+        alarm $timeout;
         $line = (<$socket>);
         alarm 0;
     };
@@ -1655,7 +1655,7 @@ __END__
 
 =head1 VERSION
 
-Version 0.1.1
+Version 0.1.2
 
 =cut
 
