@@ -21,7 +21,7 @@ ElkM1::Control::Message::ZoneAnalogVoltageReply;
     # -Or-
     
     my $elk = ElkM1::Control->new(host => '192.168.1.115');
-    my $msg = $elk->requestZoneVoltage(52); 
+    my $msg = $elk->requestZoneVoltage(zone => 52); 
     print "zone 52 has a voltage of ".$msg->getVoltage;
 
 =cut

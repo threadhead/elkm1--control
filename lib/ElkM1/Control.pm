@@ -108,7 +108,7 @@ my $UNIT_PARAM = {
     description => 'an unit code from 1..16'
 };
 
-our $VERSION = '0.1.2';
+our $VERSION = '0.1.3';
 
 =head1 METHODS
 
@@ -245,7 +245,8 @@ sub connect {
             PeerAddr => $self->{host},
             PeerPort => $self->{port},
             Proto    => 'tcp',
-            SSL_version => 'SSLv3'
+            SSL_version => 'TLSv1',
+            SSL_verify_mode => 0
         );
     }
     else {
@@ -737,7 +738,7 @@ sub speakPhrase {
     $self->sendCommand( 'sp' . sprintf( "%03d", $phrase ) );
 }
 
-=item $elk->controlOutputOn( output => 1, timeout => 10)
+=item $elk->controlOutputOn( output => 1, [ timeout => 10 ] )
 
 Turns on the specified output on for the time specified
 in timeout. The output argument is required. The timeout
@@ -939,11 +940,10 @@ sub turnOnPLCDevice {
         {
             'house' => { rules => $HOUSE_PARAM, var => \$house },
             'unit'  => { rules => $UNIT_PARAM,  var => \$unit },
-        },
-        'index' => {
-            allow => sub { ( $_[0] >= 1 and $_[0] <= 256 ) },
-            var         => \$index,
-            description => 'an device index from 1..256'
+            'index' => {
+                allow => sub { ( $_[0] >= 1 and $_[0] <= 256 ) },
+                var         => \$index,
+                description => 'an device index from 1..256'}
         },
         \%args
     );
@@ -1655,7 +1655,7 @@ __END__
 
 =head1 VERSION
 
-Version 0.1.2
+Version 0.1.3
 
 =cut
 
