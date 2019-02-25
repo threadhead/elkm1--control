@@ -108,7 +108,7 @@ my $UNIT_PARAM = {
     description => 'an unit code from 1..16'
 };
 
-our $VERSION = '0.1.1';
+our $VERSION = '0.1.3';
 
 =head1 METHODS
 
@@ -245,7 +245,8 @@ sub connect {
             PeerAddr => $self->{host},
             PeerPort => $self->{port},
             Proto    => 'tcp',
-            SSL_version => 'SSLv3'
+            SSL_version => 'TLSv1',
+            SSL_verify_mode => 0
         );
     }
     else {
@@ -265,26 +266,25 @@ sub connect {
     if ( $self->{use_ssl} and $self->{username} ) {
         my $msg; 
 
-        # give XEP time to initiate authentication - if not our readLine will timeout with nothing
-        sleep (2) ; 
+        # XEP can take a long time to respond use a min of 3 second timeout in _readLine
           
         croak "No response from XEP waiting for: 'lf'"
-          unless ( $self->_readLine =~ /\n/);
+          unless ( $self->_readLine(4) =~ /\n/);
  
         # send username before prompt because readLine is waiting for lf and XEP is prompting for Username
         print $sock "$self->{username}\r\n";
 
         croak "No response from XEP waiting for: Username:"
-          unless ( $self->_readLine =~ /Username:/);
+          unless ( $self->_readLine(4) =~ /Username:/);
 
         # send password before prompt because readLine is waiting for lf and XEP is prompting for Password
         print $sock "$self->{password}\r\n";
 
         croak "No response from XEP waiting for: Password:"
-          unless ( $self->_readLine =~ /Password:/);
+          unless ( $self->_readLine(4) =~ /Password:/);
 
         croak "Authentication failed"
-          unless ( $self->_readLine =~ /Elk-M1XEP: Login successful./);
+          unless ( $self->_readLine(4) =~ /Elk-M1XEP: Login successful./);
         # XEP responds with "*read:errno=0" if authentication fails
         
     } #end if Authentication 
@@ -738,7 +738,7 @@ sub speakPhrase {
     $self->sendCommand( 'sp' . sprintf( "%03d", $phrase ) );
 }
 
-=item $elk->controlOutputOn( output => 1, timeout => 10)
+=item $elk->controlOutputOn( output => 1, [ timeout => 10 ] )
 
 Turns on the specified output on for the time specified
 in timeout. The output argument is required. The timeout
@@ -940,11 +940,10 @@ sub turnOnPLCDevice {
         {
             'house' => { rules => $HOUSE_PARAM, var => \$house },
             'unit'  => { rules => $UNIT_PARAM,  var => \$unit },
-        },
-        'index' => {
-            allow => sub { ( $_[0] >= 1 and $_[0] <= 256 ) },
-            var         => \$index,
-            description => 'an device index from 1..256'
+            'index' => {
+                allow => sub { ( $_[0] >= 1 and $_[0] <= 256 ) },
+                var         => \$index,
+                description => 'an device index from 1..256'}
         },
         \%args
     );
@@ -1616,12 +1615,13 @@ sub readMessage {
 
 sub _readLine {
     my $self   = shift;
+    my $timeout = shift || 1;
     my $socket = $self->{_socket};
     my $line   = undef;
 
     eval {
         local $SIG{ALRM} = sub { die "alarm\n"; };
-        alarm 1;
+        alarm $timeout;
         $line = (<$socket>);
         alarm 0;
     };
@@ -1655,7 +1655,7 @@ __END__
 
 =head1 VERSION
 
-Version 0.1.1
+Version 0.1.3
 
 =cut
 
